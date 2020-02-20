@@ -1,4 +1,4 @@
-"""The Python implementation of the GRPC Seans-gRPC server."""
+"""The Python implementation of the GRPC srodi-gRPC server."""
 from concurrent import futures
 import threading
 import time
@@ -6,8 +6,9 @@ import grpc
 import pingpong_pb2
 import pingpong_pb2_grpc
 
+
 class Listener(pingpong_pb2_grpc.PingPongServiceServicer):
-    """The listener function implemests the rpc call as described in the .proto file"""
+    """The listener function implements the rpc call as described in the .proto file"""
 
     def __init__(self):
         self.counter = 0

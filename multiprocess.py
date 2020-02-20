@@ -1,4 +1,4 @@
-"""A module for runnin the client an N processes"""
+"""A module for running the client an N processes"""
 from multiprocessing import Process
 import client
 

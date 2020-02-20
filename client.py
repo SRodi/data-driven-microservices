@@ -1,12 +1,13 @@
-"""The Python implememntation of seans grpc client"""
+"""The Python implememntation of the GRPC srodi-gRPC client"""
 import os
 import time
 import grpc
 import pingpong_pb2
 import pingpong_pb2_grpc
 
+
 def run():
-    "The run method, that sends gRPC conformant messsages to the server"
+    """The run method, that sends gRPC conformant messages to the server"""
     counter = 0
     pid = os.getpid()
     with grpc.insecure_channel("localhost:9999") as channel:
@@ -30,7 +31,7 @@ def run():
 
 
 def close(channel):
-    "Close the channel"
+    """Close the channel"""
     channel.close()
 
 
