@@ -1,17 +1,24 @@
-# srodi-gRPC
+# srodi-gRPC streaming
+gRPC example to implement data streaming and simulate real-time analytics
 
-## setup
+## Prerequisites
+* Python version 2.7 or higher
+* Docker version 19.03 or higher
+
+## Clone repo and prepare environment
 ```bash
 git clone https://github.com/srodi/srodi-gRPC.git
 cd srodi-gRPC
-pip install -r requirements.txt
+pip install -r test/requirements.txt
 ```
 
-## modify the proto file
-view and edit `protos/test.proto` as required,
-`server.py` and `client.py` will have to match the changes
-## generate the gRPC client and server interfaces from .proto service definition
+## Modify proto file
+View and edit `protos/test.proto` as required, `server.py` and `client.py` will have to match changes in `test.proto`
+
+## Generate interfaces (Only if you edited `protos/test.proto`) 
+Generate the gRPC client and server interfaces from .proto service definition
 ```bash
+cd test
 python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
 ```
 
@@ -19,30 +26,41 @@ python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../pr
 ```bash
 python -m server
 ```
+
 ## Start Client
 ```bash
 python -m client
 ```
 
+# Docker
+Below steps allow to containerize the microservices with Docker and run docker images locally.
 
-# Build images
-## to build server docker image
-`docker build -f server.Dockerfile -t=grcp-stream-server .`
-## to build client docker image
-`docker build -f client.Dockerfile -t=grcp-stream-client .`
+## Build images 
+build server docker image
+```bash
+docker build -f server.Dockerfile -t=grcp-stream-server .
+```
+build client docker image
+```bash
+docker build -f client.Dockerfile -t=grcp-stream-client .
+```
 
-# Run Containers
-## to run server container
-`docker run -it --name server -p 9999:9999 grcp-stream-server`
-## to run client container
-`docker run -it --name client --network="host" grcp-stream-client` 
+## Run Containers
+run server container
+```bash
+docker run -it --name server -p 9999:9999 grcp-stream-server
+```
+run client container
+```bash
+docker run -it --name client --network="host" grcp-stream-client
+``` 
 
-# Clean up
-## remove containers
+## Clean up
+remove containers
 ```bash
 docker stop server && docker rm server client
 ```
-## remove images
+remove images
 ```bash
 docker rmi grcp-stream-server grcp-stream-client
 ```
