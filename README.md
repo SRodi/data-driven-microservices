@@ -8,26 +8,20 @@ pip install -r requirements.txt
 ```
 
 ## modify the proto file
-view and edit `protos/pingpong.proto` as required,
+view and edit `protos/test.proto` as required,
 `server.py` and `client.py` will have to match the changes
-## generate python files
+## generate the gRPC client and server interfaces from .proto service definition
 ```bash
-python -m grpc_tools.protoc -I./protos --python_out=. --grpc_python_out=. ./protos/pingpong.proto
+python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
 ```
 
 ## Start Server
 ```bash
 python -m server
 ```
-
 ## Start Client
 ```bash
 python -m client
-```
-
-## Start Multiple clients in separate processes
-```bash
-python -m multiprocess
 ```
 
 
