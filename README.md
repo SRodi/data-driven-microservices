@@ -5,8 +5,14 @@ gRPC example to implement data streaming and simulate real-time analytics
 * Python version 2.7 or higher
 * Docker version 19.03 or higher
 
+#### Architecture
+Docker compose will bring up 4 containers following the architecture below.
+
+![architecture](static/architecture.png?raw=true)git 
+
 # Docker - Compose
 This steps allow to create and run the containerized micro-services.
+Following commands must be executed within `srodi-gRPC/test/` directory.
 
 #### Build and run containers:
 ```bash
@@ -36,7 +42,9 @@ View and edit `protos/test.proto` as required, `server.py` and `client.py` will 
 Generate interfaces (Only if you edited `protos/test.proto`) 
 Generate the gRPC client and server interfaces from .proto service definition
 ```bash
-cd test
+cd server
+python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
+cd ../client
 python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
 ```
 
@@ -53,14 +61,16 @@ python -m client
 # Docker
 Below steps allow to containerize the microservices with Docker and run docker images locally.
 
+Following commands must be executed from project root directory `srodi-gRPC/`.
+
 #### Build images 
 build server docker image
 ```bash
-docker build -f server.Dockerfile -t=grcp-stream-server .
+docker build -f server/server.Dockerfile -t=grcp-stream-server .
 ```
 build client docker image
 ```bash
-docker build -f client.Dockerfile -t=grcp-stream-client .
+docker build -f client/client.Dockerfile -t=grcp-stream-client .
 ```
 
 #### Run Containers
@@ -81,4 +91,14 @@ docker stop server && docker rm server client
 remove images
 ```bash
 docker rmi grcp-stream-server grcp-stream-client
+```
+
+#### Redis
+
+Run the latest `bitnami/redis` image
+`docker run --name redis -e ALLOW_EMPTY_PASSWORD=yes bitnami/redis:latest`
+
+Open redis-cli
+```bash
+docker exec -it [CONTAINER_ID] redis-cli
 ```

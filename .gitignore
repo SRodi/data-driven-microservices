@@ -2,6 +2,6 @@
 .vscode
 __pycache__
 venv
-pingpong_pb2.py
-pingpong_pb2_grpc.py
 .idea/
+old/
+.DS_Store
