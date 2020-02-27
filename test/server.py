@@ -4,18 +4,37 @@ import grpc
 import test_pb2
 import time
 import test_pb2_grpc
+import csv
 
 
 class TestService(test_pb2_grpc.TestServiceServicer):
     """The listener function implements the rpc call as described in the .proto file"""
-
     def __init__(self):
-        self.messages = ["Hello ", "Greetings ", "All the best ", "Nice to meet you "]
+        print("server running on port 9999")
+        self.messages = []
+        """read csv file"""
+        with open('static/training.1600000.processed.noemoticon.csv') as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            line_count = 0
+            try:
+                for row in csv_reader:
+                    for col in range(len(row)):
+                        if col == 4 and line_count < 100:
+                            out = row[col] + ' says: ======> ' + row[col + 1]
+                            # print(out)
+                            self.messages.append(out)
+                    line_count += 1
+                # print('Processed ', line_count, ' lines.')
+            except UnicodeDecodeError:
+                print('UnicodeDecodeError')
 
     def TestCall(self, request, context):
+        # request.name to access value sent by client
+        print('client: ', str(request.name))
         for g in self.messages:
             time.sleep(2)
-            yield test_pb2.TestResponse(message=g + request.name)
+            if len(g) > 0:
+                yield test_pb2.TestResponse(message=g)
 
 
 def serve():

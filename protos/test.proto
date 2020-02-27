@@ -1,7 +1,12 @@
 // to recompile this proto run
-// python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
+// python -m test.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
+
+// frontend
+// protoc test.proto --js_out=import_style=commonjs:../frontend --grpc-web_out=import_style=commonjs,mode=grpcwebtext:../frontend
 
 syntax = "proto3";
+
+package stream;
 
 service TestService {
     //an example of getting a feature

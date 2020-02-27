@@ -15,10 +15,10 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='test.proto',
-  package='',
+  package='stream',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=b'\n\ntest.proto\"\x1b\n\x0bTestRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1f\n\x0cTestResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2:\n\x0bTestService\x12+\n\x08TestCall\x12\x0c.TestRequest\x1a\r.TestResponse\"\x00\x30\x01\x62\x06proto3'
+  serialized_pb=b'\n\ntest.proto\x12\x06stream\"\x1b\n\x0bTestRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1f\n\x0cTestResponse\x12\x0f\n\x07message\x18\x01 \x01(\t2H\n\x0bTestService\x12\x39\n\x08TestCall\x12\x13.stream.TestRequest\x1a\x14.stream.TestResponse\"\x00\x30\x01\x62\x06proto3'
 )
 
 
@@ -26,13 +26,13 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _TESTREQUEST = _descriptor.Descriptor(
   name='TestRequest',
-  full_name='TestRequest',
+  full_name='stream.TestRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='TestRequest.name', index=0,
+      name='name', full_name='stream.TestRequest.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -50,20 +50,20 @@ _TESTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=14,
-  serialized_end=41,
+  serialized_start=22,
+  serialized_end=49,
 )
 
 
 _TESTRESPONSE = _descriptor.Descriptor(
   name='TestResponse',
-  full_name='TestResponse',
+  full_name='stream.TestResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='message', full_name='TestResponse.message', index=0,
+      name='message', full_name='stream.TestResponse.message', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -81,8 +81,8 @@ _TESTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=43,
-  serialized_end=74,
+  serialized_start=51,
+  serialized_end=82,
 )
 
 DESCRIPTOR.message_types_by_name['TestRequest'] = _TESTREQUEST
@@ -92,14 +92,14 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 TestRequest = _reflection.GeneratedProtocolMessageType('TestRequest', (_message.Message,), {
   'DESCRIPTOR' : _TESTREQUEST,
   '__module__' : 'test_pb2'
-  # @@protoc_insertion_point(class_scope:TestRequest)
+  # @@protoc_insertion_point(class_scope:stream.TestRequest)
   })
 _sym_db.RegisterMessage(TestRequest)
 
 TestResponse = _reflection.GeneratedProtocolMessageType('TestResponse', (_message.Message,), {
   'DESCRIPTOR' : _TESTRESPONSE,
   '__module__' : 'test_pb2'
-  # @@protoc_insertion_point(class_scope:TestResponse)
+  # @@protoc_insertion_point(class_scope:stream.TestResponse)
   })
 _sym_db.RegisterMessage(TestResponse)
 
@@ -107,16 +107,16 @@ _sym_db.RegisterMessage(TestResponse)
 
 _TESTSERVICE = _descriptor.ServiceDescriptor(
   name='TestService',
-  full_name='TestService',
+  full_name='stream.TestService',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=76,
-  serialized_end=134,
+  serialized_start=84,
+  serialized_end=156,
   methods=[
   _descriptor.MethodDescriptor(
     name='TestCall',
-    full_name='TestService.TestCall',
+    full_name='stream.TestService.TestCall',
     index=0,
     containing_service=None,
     input_type=_TESTREQUEST,

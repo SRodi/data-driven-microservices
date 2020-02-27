@@ -1,0 +1,16 @@
+version: '3'
+services:
+  tweet_stream_server:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    ports:
+      - "9999:9999"
+  tweet_stream_client:
+    build:
+      context: .
+      dockerfile: client.Dockerfile
+    depends_on:
+      - tweet_stream_server
+    command: ["./scripts/wait-for-it.sh", "tweet_stream_server:9999", "--", "python", "client.py"]
+

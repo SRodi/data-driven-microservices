@@ -1,6 +1,21 @@
 # srodi-gRPC streaming
 gRPC example to implement data streaming and simulate real-time analytics
 
+# Docker - Compose
+Build and run containers:
+```bash
+docker-compose up
+```
+
+## Clean up
+Stop execution and remove containers:
+```bash
+docker-compose stop
+docker-compose rm
+```
+You will also have to remove docker images by running `docker images` and `docker rmi [IMAGE_ID]`
+
+# Run locally with no Docker
 ## Prerequisites
 * Python version 2.7 or higher
 * Docker version 19.03 or higher
@@ -40,6 +55,10 @@ build server docker image
 ```bash
 docker build -f server.Dockerfile -t=grcp-stream-server .
 ```
+build proxy docker image
+```bash
+docker build -t grpc-stream-proxy -f proxy.Dockerfile .
+```
 build client docker image
 ```bash
 docker build -f client.Dockerfile -t=grcp-stream-client .
@@ -48,7 +67,13 @@ docker build -f client.Dockerfile -t=grcp-stream-client .
 ## Run Containers
 run server container
 ```bash
+docker run -d -p 9999:9999 --name node-server grcp-stream-server
+
 docker run -it --name server -p 9999:9999 grcp-stream-server
+```
+run proxy container
+```bash
+docker run -d -p 3000:3000 --link node-server:node-server grpc-stream-proxy
 ```
 run client container
 ```bash
