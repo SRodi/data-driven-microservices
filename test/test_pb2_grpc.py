@@ -15,7 +15,7 @@ class TestServiceStub(object):
       channel: A grpc.Channel.
     """
     self.TestCall = channel.unary_stream(
-        '/TestService/TestCall',
+        '/stream.TestService/TestCall',
         request_serializer=test__pb2.TestRequest.SerializeToString,
         response_deserializer=test__pb2.TestResponse.FromString,
         )
@@ -42,5 +42,5 @@ def add_TestServiceServicer_to_server(servicer, server):
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(
-      'TestService', rpc_method_handlers)
+      'stream.TestService', rpc_method_handlers)
   server.add_generic_rpc_handlers((generic_handler,))

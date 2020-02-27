@@ -1,6 +1,21 @@
 # srodi-gRPC streaming
 gRPC example to implement data streaming and simulate real-time analytics
 
+# Docker - Compose
+Build and run containers:
+```bash
+docker-compose up
+```
+
+## Clean up
+Stop execution and remove containers:
+```bash
+docker-compose stop
+docker-compose rm
+```
+You will also have to remove docker images by running `docker images` and `docker rmi [IMAGE_ID]`
+
+# Run locally with no Docker
 ## Prerequisites
 * Python version 2.7 or higher
 * Docker version 19.03 or higher
