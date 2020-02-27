@@ -4,6 +4,9 @@ gRPC example to implement data streaming and simulate real-time analytics
 #### Prerequisites
 * Python version 2.7 or higher
 * Docker version 19.03 or higher
+* Add `.csv` file with relative path `server/static/training.1600000.processed.noemoticon.csv`
+
+File `training.1600000.processed.noemoticon.csv` can be downloaded from this [link](https://www.kaggle.com/kazanova/sentiment140/data)
 
 #### Architecture
 Docker compose will bring up 4 containers following the architecture below.
