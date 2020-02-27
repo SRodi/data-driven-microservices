@@ -8,7 +8,7 @@ gRPC example to implement data streaming and simulate real-time analytics
 #### Architecture
 Docker compose will bring up 4 containers following the architecture below.
 
-![architecture](https://github.com/SRodi/gRPC/tree/master/static/architecture.png)
+![architecture](static/architecture.png)
 
 # Docker - Compose
 This steps allow to create and run the containerized micro-services.
