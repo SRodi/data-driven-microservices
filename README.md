@@ -55,10 +55,6 @@ build server docker image
 ```bash
 docker build -f server.Dockerfile -t=grcp-stream-server .
 ```
-build proxy docker image
-```bash
-docker build -t grpc-stream-proxy -f proxy.Dockerfile .
-```
 build client docker image
 ```bash
 docker build -f client.Dockerfile -t=grcp-stream-client .
@@ -67,13 +63,7 @@ docker build -f client.Dockerfile -t=grcp-stream-client .
 ## Run Containers
 run server container
 ```bash
-docker run -d -p 9999:9999 --name node-server grcp-stream-server
-
 docker run -it --name server -p 9999:9999 grcp-stream-server
-```
-run proxy container
-```bash
-docker run -d -p 3000:3000 --link node-server:node-server grpc-stream-proxy
 ```
 run client container
 ```bash
