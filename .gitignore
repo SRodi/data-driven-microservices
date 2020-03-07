@@ -4,4 +4,7 @@ __pycache__
 venv
 .idea/
 old/
+server/static/training.1600000.processed.noemoticon.csv
 .DS_Store
+client-js
+proxy

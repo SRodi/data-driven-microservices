@@ -1,0 +1,452 @@
+/*
+
+        SMALL SCREEN FIRST DESIGN
+ */
+/*
+
+        VARIABLES
+ */
+:root {
+    --max-screen-width: 1300px;
+    --border-radius: 5px;
+    --base-font-size: 10px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+html,body{
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-screen-width);
+    font-family: 'Oxygen', serif;
+    font-size: var(--base-font-size);
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+/*a:link, a:visited, a:hover, a:focus, a:active {*/
+/*    cursor: pointer;*/
+/*}*/
+#nav-menu > .nav-item > a:hover, #nav-menu > .nav-item > a:focus{
+    color: sandybrown;
+}
+#nav-menu > div > a{
+    color: white;
+}
+input{
+    border: 0;
+    border-radius: 0;
+}
+/*
+
+        MAIN GRID
+ */
+#container {
+    display: grid;
+    height: 100%;
+    grid-template-areas:
+            "nav"
+            "title"
+            "search"
+            "main"
+            "footer";
+    grid-template-rows: max-content max-content max-content 1fr max-content;
+}
+#nav {
+    grid-area: nav;
+    background-color: darkgrey;
+    overflow: scroll;
+}
+#title {
+    grid-area: title;
+    background-color: black;
+    color: white;
+    padding: 1em;
+    font-size: 1.5em;
+}
+#search {
+    grid-area: search;
+    background-color: #666666;
+    padding: 1em;
+}
+#main {
+    grid-area: main;
+    background-color: white;
+}
+#footer {
+    grid-area: footer;
+    background-color: lightgrey;
+    padding: 1em;
+}
+/*
+
+        PRODUCT BUTTON
+ */
+#nav-btn > div{
+    border: 0.1em solid black;
+    border-radius: var(--border-radius);
+    padding: 1em;
+    margin: 0.5em;
+    max-width: max-content;
+    font-size: 1.5em;
+}
+#nav-btn > div:hover {
+    color: white;
+    border: 0.1em solid white;
+}
+/*
+
+        NAVIGATION MENU
+ */
+
+#nav-menu {
+    display: none;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+.nav-item {
+    background-color: #666666;
+    color: white;
+    padding: 0.3em;
+    text-align: center;
+    border-radius: var(--border-radius);
+    min-width: max-content;
+    flex: 1;
+    margin: 0.4em;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    font-size: 1.5em;
+}
+/*
+
+        SEARCH BAR
+*/
+#search{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+#search > *{
+    min-width: min-content;
+    flex: 1;
+    text-align: right;
+}
+.input{
+    width: 2em;
+    caret-color: transparent;
+    font-size: 3em;
+    line-height: 1em;
+    outline: 0;
+    background: transparent;
+    color: white;
+    border-bottom: 2px solid white;
+    transition: 0.5s;
+    text-overflow: ellipsis;
+}
+.input:focus {width: 70%;}
+#search-input i {
+    color: white;
+    font-size: large;
+    margin: 1em;
+}
+/*
+
+         MAIN
+ */
+#main{
+    margin: 0;
+    display: grid;
+    height: 100%;
+    padding: 0 1em;
+    grid-gap: 1em;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(7, max-content);
+    grid-template-areas:
+        /*"nav-btn"*/
+            "a b"
+            "c c"
+            "d e"
+            "f f"
+            "g h"
+            "i i"
+            "j .";
+    justify-content: center;
+    overflow: scroll;
+}
+#loader-container{
+    display: flex;
+}
+#main > .col-test {
+    justify-content: center;
+    background-color: sandybrown;
+    padding: 2em;
+    margin: 0.3em;
+    border-radius: var(--border-radius);
+    font-size: 2em;
+    text-align: center;
+}
+#main > .col-test:nth-child(1) {
+    grid-area: a;
+}
+#main > .col-test:nth-child(2) {
+    grid-area: b;
+}
+#main > .col-test:nth-child(3) {
+    grid-area: c;
+}
+#main > .col-test:nth-child(4) {
+    grid-area: d;
+}
+#main > .col-test:nth-child(5) {
+    grid-area: e;
+}
+#main > .col-test:nth-child(6) {
+    grid-area: f;
+}
+#main > .col-test:nth-child(7) {
+    grid-area: g;
+}
+#main > .col-test:nth-child(8) {
+    grid-area: h;
+}
+#main > .col-test:nth-child(9) {
+    grid-area: i;
+}
+#main > .col-test:nth-child(10) {
+    grid-area: j;
+}
+/*
+
+         LOADER
+*/
+.loader {
+    margin: auto;
+    border: 0.4em solid #f3f3f3; /* Light grey */
+    border-top: 0.4em solid gray; /* Blue */
+    border-radius: 50%;
+    width: 1em;
+    height: 1em;
+    animation: spin 2s linear infinite;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+/*
+
+        FOOTER
+*/
+.text-foot{
+    display: none;
+}
+.text-foot1{
+    display: none;
+}
+nav ul {
+    width: 100%;
+    list-style: none;
+    padding: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-around;
+}
+nav li {
+    margin: 0.5em 1em;
+}
+nav a {
+    color: darkgrey;
+    font-size: 1.5em;
+}
+nav a:hover {
+    color: sandybrown;
+}
+/*
+
+        MEDIA QUERIES
+*/
+/*
+
+        NAVIGATION ITEM FIXED LENGTH
+*/
+@media screen and (min-width: 390px) {
+    .nav-item{
+        min-width: 220px;
+    }
+}
+/*
+
+       MOBILE ORIENTATION
+ */
+@media screen and (orientation: portrait){
+    a:link, a:visited, a:hover, a:focus, a:active {
+        cursor: none;
+    }
+    a:hover, a:focus{
+        color: sandybrown;
+    }
+}
+@media screen and (orientation:landscape) {
+    a:link, a:visited, a:hover, a:focus, a:active {
+        cursor: none;
+    }
+    a:hover, a:focus{
+        color: sandybrown;
+    }
+    #loader-container{
+        min-height: 400px;
+    }
+    #container {
+        grid-template-columns:max-content 1fr;
+        grid-template-rows:max-content max-content 1fr max-content;
+        grid-template-areas:
+                "nav nav"
+                "title search"
+                "main main"
+                "footer footer";
+        overflow: scroll;
+    }
+    #search{
+        background-color: black;
+    }
+}
+/*
+
+        MEDIUM SCREEN
+ */
+@media screen and (min-width: 1000px) {
+    a:link, a:visited, a:hover, a:focus, a:active {
+        cursor: pointer;
+    }
+    #nav-menu {
+        display: flex !important;
+    }
+    #nav-menu > * {
+        min-width: min-content;
+    }
+    #container {
+        margin: 0;
+        display: grid;
+        grid-gap: 0;
+        height: 100%;
+        grid-template-columns:min-content max-content 1fr;
+        grid-template-areas:
+                "nav title search"
+                "nav main main"
+                "footer footer footer";
+        grid-template-rows: max-content 1fr max-content;
+    }
+    #main {
+        overflow: unset;
+    }
+    #search{
+        background-color: black;
+    }
+    #nav-menu{
+        flex-direction: column;
+        font-size: 1em;
+    }
+    #nav-menu > div{
+        margin: 0.5em;
+    }
+    #nav-btn {
+        margin: 1.5em;
+        font-size: 1em;
+    }
+    .text-foot{
+        display: flex;
+    }
+    .text-foot1{
+        display: flex;
+    }
+    .icon-foot{
+        /*display: none;*/
+    }
+
+}
+    /*
+
+            LARGE SCREEN
+     */
+@media screen and (min-width: 1200px){
+    #nav-btn {
+        margin-left: 0;
+    }
+    #nav > #nav-btn > div {
+        border-radius: 0;
+        font-size: 1.5em;
+    }
+    .nav-item {
+        flex: none;
+        padding: 0;
+    }
+    #nav-menu{
+        width: 100%;
+        justify-content: space-between;
+    }
+    #nav{
+        margin-top: -1.5em;
+        margin-bottom: -1.5em;
+        background-color: white;
+        display: flex;
+        overflow: unset;
+    }
+    #nav > div > div {
+        margin: 0;
+    }
+    #nav-menu > div > a{
+        color: black;
+    }
+    #nav-menu > div{
+        color: black;
+        background-color: transparent;
+        font-size: 1.7em;
+    }
+    #nav-menu{
+        display: flex !important;
+        flex-direction: row;
+    }
+    #nav-btn > div{
+        background-color: lightgray;
+        border: transparent;
+        font-size: 1em;
+        text-align: left;
+        margin: 0;
+    }
+    #nav-btn > div:hover {
+        color: white;
+        border: transparent;
+    }
+    #container {
+        margin: 0;
+        display: grid;
+        grid-gap: 0;
+        padding: 0;
+        height: 100%;
+        grid-template-columns:max-content 1fr;
+        grid-template-areas:
+                "nav nav"
+                "title search"
+                "main main"
+                "footer footer";
+        grid-template-rows: min-content max-content 1fr max-content;
+    }
+    #main{
+        padding: 1em 0;
+    }
+    #main > .col-test {
+        margin: 0;
+    }
+    .icon-foot{
+        display: flex;
+    }
+    .text-foot1{
+        display: none;
+    }
+}
