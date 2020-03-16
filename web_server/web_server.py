@@ -1,41 +1,37 @@
+# coding=utf-8
 import os
-from flask import Flask, send_from_directory
+from flask import Flask, render_template, send_from_directory
 import redis
 
 app = Flask(__name__)
-conn = redis.StrictRedis(host='redis', port=6379)
+redis_host = 'redis'
 
-
-@app.route('/')
-def hello():
-    return "sample gRPC streaming application. visit route /tweets"
-
-
-@app.route('/analysis')
-def print_analysis():
-    output = ''
-    try:
-        value = str(conn.get("log.client-analytics.total"))
-        output += 'Total number of tweets so far: ' + str(value) + '<br>'
-        value = str(conn.get("log.client-analytics.3min"))
-        output += 'Last 3 minutes sentiment: ' + str(value) + '<br>'
-        value = str(conn.get("log.client-analytics.longest"))
-        output += 'Longest tweet so far: ' + str(value) + '<br>'
-    except Exception as ex:
-        output = 'Error:' + str(ex)
-    return output
-
-
-@app.route('/tweets')
+@app.route('/', methods=['GET'])
 def print_tweets():
-    output = ''
+    output1 = []
+    it, nl, sp = '', '', ''
+
+    # try and read from redis to then pass
+    # items and translations to html (index.html)
     try:
-        for key in conn.scan_iter("log.client-analytics.*"):
-            value = str(conn.get(key))
-            output += str(key) + str(value) + '<br>'
+        conn = redis.StrictRedis(host=redis_host, port=6379)
+        value = 'TOTAL COUNT: '+str(conn.get("log.client-analytics.total"))
+        output1.append(value)
+        value = 'LATEST TWEET: '+str(conn.get("log.client-analytics.latest"))
+        output1.append(value)
+        value = 'SENTIMENT FOR LAST 3 MIN: ' + str(conn.get("log.client-analytics.3min"))
+        output1.append(value)
+        value = 'LONGEST TWEET: ' + str(conn.get("log.client-analytics.longest"))
+        output1.append(value)
+        sp = str(conn.get("log.client-analytics.sp"))
+        it = str(conn.get("log.client-analytics.it"))
+        nl = str(conn.get("log.client-analytics.nl"))
+
+        conn.close()
     except Exception as ex:
-        output = 'Error:' + str(ex)
-    return output
+        output1.append('Error:' + str(ex))
+
+    return render_template("index.html", items=output1, sp=sp, it=it, nl=nl)
 
 
 @app.route('/favicon.ico')

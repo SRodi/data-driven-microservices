@@ -19,10 +19,10 @@ class TestService(test_pb2_grpc.TestServiceServicer):
             try:
                 for row in csv_reader:
                     for col in range(len(row)):
-                        if col == 4 and line_count < 100:
-                            out = row[col] + ' says: ======> ' + row[col + 1]
-                            # print(out)
-                            self.messages.append(out)
+                        if col == 4:  # and line_count < 100:
+                            # row[col] is the sender
+                            # row[col + 1] is the tweet
+                            self.messages.append(row[col + 1])
                     line_count += 1
                 # print('Processed ', line_count, ' lines.')
             except UnicodeDecodeError:

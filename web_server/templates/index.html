@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{{ url_for('static', filename='styles.css') }}" rel = "stylesheet">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+        <link href="https://fonts.googleapis.com/css?family=Oxygen&display=swap" rel="stylesheet">
+        <title>PWA</title>
+    </head>
+
+    <body>
+        <script>
+            // this applies inline-css to provide button functionality to
+            // display or hide products nav-menu.
+            function toggleMenu(){
+                const nav = window.document.getElementById("nav-menu");
+                if(window.document.body.clientWidth < 1000){
+                    if(nav.style.display === "flex"){
+                        nav.style.display = "none";
+                    } else {
+                        nav.style.display = "flex";
+                    }
+                }
+            }
+        </script>
+        <script>
+            function transl(ln){
+                let nav = '';
+                if(ln==='sp')
+                    nav = window.document.getElementById("sp");
+                if(ln==='it')
+                    nav = window.document.getElementById("it");
+                if(ln==='nl')
+                    nav = window.document.getElementById("nl");
+                if(nav.style.display === 'none' ){
+                     nav.style.display = "block";
+                } else {
+                    nav.style.display = "none";
+                }
+            }
+        </script>
+
+        <div id="container">
+
+            <div id="nav">
+                <div id="nav-btn" onclick="toggleMenu()">
+                    <div><img id="intern-logo" src="../static/img_107185.png" alt="" style="width: 1em;"></div></div>
+                <div id="nav-menu">
+                    <div class="nav-item"><a href="#sp" onclick="transl('sp')">🇪🇸</a></div>
+                    <div class="nav-item"><a href="#it" onclick="transl('it')">🇮🇹</a></div>
+                    <div class="nav-item"><a href="#nl" onclick="transl('nl')">🇳🇱</a></div>
+                </div>
+            </div>
+
+            <div id="title">
+                <h2>Tweet stream</h2>
+            </div>
+
+            <div id ="search" style="background-color: black">
+<!--       WIP         <div id="search-input">-->
+<!--                    <form method="POST">-->
+<!--                        <label>-->
+<!--                            <input type="text" class="input" name="tag" placeholder="">-->
+<!--                            <i class="fas fa-search" type="submit" value="Submit"></i>-->
+<!--                        </label>-->
+<!--                    </form>-->
+<!--                </div>-->
+            </div>
+
+            <div id="main" >
+                {% for item in items %}
+                  <div class="col-test" id="{{ name }}">{{ item }}</div>
+                {% endfor %}
+                <div class="col-test" id="sp" style="display: none">LATEST IN SPANISH: {{ sp }}</div>
+                <div class="col-test" id="it" style="display: none">LATEST IN ITALIAN: {{ it }}</div>
+                <div class="col-test" id="nl" style="display: none">LATEST IN DUTCH: {{ nl }}</div>
+            </div>
+
+
+            <div id="footer">
+                <nav id="icons-footer">
+                    <ul>
+                        <li class="icon-foot"><a href = ""><i class="fas fa-rocket"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </body>
+</html>
