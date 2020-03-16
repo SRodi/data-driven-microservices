@@ -30,7 +30,8 @@ docker-compose rm
 ```
 You will also have to remove docker images by running `docker images` and `docker rmi [IMAGE_ID]`
 
-# Run locally with no Docker
+# Run locally with no Docker 
+This refers to server and gRPC-stream client only
 
 #### Clone repo and prepare environment
 Initial steps
@@ -104,4 +105,18 @@ Run the latest `bitnami/redis` image
 Open redis-cli
 ```bash
 docker exec -it [CONTAINER_ID] redis-cli
+```
+
+#### Web Server
+
+#### Build images 
+build web-server docker image
+```bash
+docker build -f web_server/web_server.Dockerfile -t=grcp-web-server .
+```
+
+#### Run Containers
+run server container
+```bash
+docker run -it --name web-server -p 8080:5000 grcp-web-server
 ```
