@@ -51,6 +51,8 @@ python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../pr
 cd ../client
 python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
 ```
+the interface for `client` and `web-server` are the same. Once generated the `pb2.py` and `pb2_grpc.py`
+ for the client, you can copy and paste the same in `web_server` directory.
 
 Start Server
 ```bash
