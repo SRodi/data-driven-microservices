@@ -9,7 +9,6 @@ redis_host = 'redis'
 @app.route('/', methods=['GET'])
 def print_tweets():
     output1 = []
-    it, nl, sp = '', '', ''
 
     # try and read from redis to then pass
     # items and translations to html (index.html)
@@ -23,15 +22,12 @@ def print_tweets():
         output1.append(value)
         value = 'LONGEST TWEET: ' + str(conn.get("log.client-analytics.longest"))
         output1.append(value)
-        sp = str(conn.get("log.client-analytics.sp"))
-        it = str(conn.get("log.client-analytics.it"))
-        nl = str(conn.get("log.client-analytics.nl"))
 
         conn.close()
     except Exception as ex:
         output1.append('Error:' + str(ex))
 
-    return render_template("index.html", items=output1, sp=sp, it=it, nl=nl)
+    return render_template("index.html", items=output1)
 
 
 @app.route('/favicon.ico')

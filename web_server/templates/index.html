@@ -24,34 +24,8 @@
                 }
             }
         </script>
-        <script>
-            function transl(ln){
-                let nav = '';
-                if(ln==='sp')
-                    nav = window.document.getElementById("sp");
-                if(ln==='it')
-                    nav = window.document.getElementById("it");
-                if(ln==='nl')
-                    nav = window.document.getElementById("nl");
-                if(nav.style.display === 'none' ){
-                     nav.style.display = "block";
-                } else {
-                    nav.style.display = "none";
-                }
-            }
-        </script>
 
         <div id="container">
-
-            <div id="nav">
-                <div id="nav-btn" onclick="toggleMenu()">
-                    <div><img id="intern-logo" src="../static/img_107185.png" alt="" style="width: 1em;"></div></div>
-                <div id="nav-menu">
-                    <div class="nav-item"><a href="#sp" onclick="transl('sp')">🇪🇸</a></div>
-                    <div class="nav-item"><a href="#it" onclick="transl('it')">🇮🇹</a></div>
-                    <div class="nav-item"><a href="#nl" onclick="transl('nl')">🇳🇱</a></div>
-                </div>
-            </div>
 
             <div id="title">
                 <h2>Tweet stream</h2>
@@ -72,9 +46,6 @@
                 {% for item in items %}
                   <div class="col-test" id="{{ name }}">{{ item }}</div>
                 {% endfor %}
-                <div class="col-test" id="sp" style="display: none">LATEST IN SPANISH: {{ sp }}</div>
-                <div class="col-test" id="it" style="display: none">LATEST IN ITALIAN: {{ it }}</div>
-                <div class="col-test" id="nl" style="display: none">LATEST IN DUTCH: {{ nl }}</div>
             </div>
 
 

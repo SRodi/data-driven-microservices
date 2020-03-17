@@ -49,17 +49,6 @@ def eval_len(tweet):
     return longest_tweet
 
 
-def translate(blob, message):
-    it = es = nl = message
-    try:
-        it = str(blob.translate(to="it"))
-        es = str(blob.translate(to="es"))
-        nl = str(blob.translate(to="nl"))
-    except Exception as ex:
-        print('not translated ', ex)
-    return it, es, nl
-
-
 def run():
     count = 0
     global overall_dict
@@ -73,7 +62,6 @@ def run():
             print("Client received: " + str(response.message))
             message = str(response.message)
             blob = TextBlob(message)
-            it,es,nl = translate(blob, message)
             sent_3min = eval_sentiment(blob)
             sys.stdout.flush()
             try:
@@ -89,10 +77,6 @@ def run():
                 #   sentiment of current tweet
                 conn.set("log.client-analytics.3min", sent_3min)
 
-                #   translate latest tweet
-                conn.set("log.client-analytics.it", it)
-                conn.set("log.client-analytics.sp", es)
-                conn.set("log.client-analytics.nl", nl)
                 #   longest tweet
                 if count == 0:
                     conn.set("log.client-analytics.longest", message)
