@@ -9,8 +9,18 @@ gRPC example to implement data streaming and simulate real-time analytics
 File `training.1600000.processed.noemoticon.csv` can be downloaded from this [link](https://www.kaggle.com/kazanova/sentiment140/data)
 
 #### Architecture
-Docker compose will bring up 4 containers following the architecture below.
+Docker compose will bring up 4 containers following the architecture described in diagram below.
 
+I have chosen to implement a server to read the tweets csv and generate the gRPC 
+stream which is then consumed by a client service which live-streams the tweets, 
+processes some analytics and stores tweets/analytics-results in a redis service. 
+To complete the project I have developed a frontend service with python Flask 
+which reads from redis and displays tweets (http://localhost:8080). The server is 
+streaming tweets with a 2 seconds delay between each tweet, so if you refresh the frontend 
+you can see new tweets coming in. This architecture allows for separation of concerns 
+where each service is in charge of a limited number of specific tasks. This architecture 
+promotes low coupling and high cohesion where the only dependency is client-depend-on-server 
+for the gRPC stream. 
 ![architecture](static/architecture.png)
 
 # Docker - Compose
