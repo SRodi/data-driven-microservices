@@ -12,7 +12,7 @@ from textblob import TextBlob
 longest_tweet = ''
 overall_sentiment = {'positive': 0,'negative': 0}
 redis_host = 'redis'
-server_host = 'tweet_stream_server'
+server_host = 'tweet-stream-server'
 rolling_metrics_array = []
 
 def calc_fraction(a, b):
