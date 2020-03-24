@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tweet-stream-server-deploy
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: tweet-stream-server
+  minReadySeconds: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: tweet-stream-server
+    spec:
+      containers:
+      - name: tweet-stream-server
+        image: srodi/stream-server:latest
+        ports:
+        - containerPort: 9999

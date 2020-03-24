@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-server-deploy
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: web-server
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: web-server
+    spec:
+      containers:
+      - name: weblogs
+        image: srodi/web-server:latest
+        ports:
+        - containerPort: 5000
