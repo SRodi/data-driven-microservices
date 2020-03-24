@@ -21,6 +21,7 @@ you can see new tweets coming in. This architecture allows for separation of con
 where each service is in charge of a limited number of specific tasks. This architecture 
 promotes low coupling and high cohesion where the only dependency is client-depend-on-server 
 for the gRPC stream. 
+
 ![architecture](static/architecture.png)
 
 # Docker - Compose
@@ -72,7 +73,7 @@ Start Client
 python -m client
 ```
 
-# Docker
+### Docker
 Below steps allow to containerize the microservices with Docker and run docker images locally.
 
 Following commands must be executed from project root directory `srodi-gRPC/`.
@@ -130,3 +131,22 @@ run server container
 ```bash
 docker run -it --name web-server -p 8080:5000 grcp-web-server
 ```
+
+# Kubernetes
+All services can be deployed in a `Kubernets` cluster, testing has ben conducted on `microk8` instance.
+
+#### Create services
+create deployments and services within `microk8`
+```bash
+bash kubernetes/create.sh
+```
+
+#### Delete services
+delete deployments and services within `microk8`
+```bash
+bash kubernetes/delete.sh
+```
+
+Kubernetes demo
+
+![architecture](kubernetes/static/microk8-demo.png)
