@@ -41,7 +41,7 @@ docker-compose rm
 ```
 You will also have to remove docker images by running `docker images` and `docker rmi [IMAGE_ID]`
 
-# Run locally with no Docker 
+# Run locally (without Docker)
 This refers to server and gRPC-stream client only
 
 #### Clone repo and prepare environment
@@ -62,18 +62,16 @@ python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../pr
 cd ../client
 python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/test.proto
 ```
-
 Start Server
 ```bash
 python -m server
 ```
-
 Start Client
 ```bash
 python -m client
 ```
 
-### Docker
+# Docker
 Below steps allow to containerize the microservices with Docker and run docker images locally.
 
 Following commands must be executed from project root directory `srodi-gRPC/`.
@@ -87,7 +85,10 @@ build client docker image
 ```bash
 docker build -f client/client.Dockerfile -t=grcp-stream-client .
 ```
-
+build web-server docker image
+```bash
+docker build -f web_server/web_server.Dockerfile -t=grcp-web-server .
+```
 #### Run Containers
 run server container
 ```bash
@@ -97,39 +98,26 @@ run client container
 ```bash
 docker run -it --name client --network="host" grcp-stream-client
 ``` 
-
+run web-server container
+```bash
+docker run -it --name web-server -p 8080:5000 grcp-web-server
+```
 #### Clean up
 remove containers
 ```bash
-docker stop server && docker rm server client
+docker stop server web-server && docker rm server client web-server
 ```
 remove images
 ```bash
-docker rmi grcp-stream-server grcp-stream-client
+docker rmi grcp-stream-server grcp-stream-client grcp-web-server
 ```
 
 #### Redis
-
 Run the latest `bitnami/redis` image
 `docker run --name redis -e ALLOW_EMPTY_PASSWORD=yes bitnami/redis:latest`
-
 Open redis-cli
 ```bash
 docker exec -it [CONTAINER_ID] redis-cli
-```
-
-#### Web Server
-
-#### Build images 
-build web-server docker image
-```bash
-docker build -f web_server/web_server.Dockerfile -t=grcp-web-server .
-```
-
-#### Run Containers
-run server container
-```bash
-docker run -it --name web-server -p 8080:5000 grcp-web-server
 ```
 
 # Kubernetes
