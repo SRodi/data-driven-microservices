@@ -135,6 +135,33 @@ docker run -it --name web-server -p 8080:5000 grcp-web-server
 # Kubernetes
 All services can be deployed in a `Kubernets` cluster, testing has ben conducted on `microk8` instance.
 
+### multipass
+install multipass Ubuntu VMs orchestrator:
+```shell script
+sudo snap install multipass --beta --classic
+```
+### microk8s
+install a minimal, lightweight Kubernetes 
+```shell script
+multipass launch --name microk8s-vm --mem 3G
+multipass exec microk8s-vm -- sudo snap install microk8s --classic --channel=1.17/stable
+multipass exec microk8s-vm -- sudo iptables -P FORWARD ACCEPT
+multipass list
+```
+access the VM via multipass interface and execute the following
+```shell script
+sudo usermod -a -G microk8s $USER
+su - $USER
+alias kubectl='microk8s.kubectl'
+# enable for our micro-services in-cluster communication
+microk8s.enable dns
+# add public key of host
+echo "<ssh-host-pub-key>" >> .ssh/authorized_keys
+```
+from host machine run the following to copy kubernetes directory to vm via ssh
+```shell script
+rsync -avz -e 'ssh' /path/to/local/kubernetes/dir user@remotehost:/path/to/remote
+```
 #### Create services
 create deployments and services within `microk8`
 ```bash
@@ -150,3 +177,49 @@ bash kubernetes/delete.sh
 Kubernetes demo
 
 ![architecture](kubernetes/static/microk8-demo.png)
+
+#### Kubernetes dashboard
+
+On multipass VM run:
+```shell script
+microk8s.enable dashboard
+# get token for dashboard login
+token=$(microk8s.kubectl -n kube-system get secret | grep default-token | cut -d " " -f1)
+microk8s.kubectl -n kube-system describe secret $token
+# run dashboard
+kubectl proxy
+```
+On host machine run:
+```shell script
+# get ip of running VMs
+multipass list
+# port-forward to access dashbord from localhost
+ssh -L 8001:localhost:8001 ubuntu@<vm-ip>
+```
+Open dashboard at `http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#/login` 
+using the `token` obtained in previous step.
+
+remove ssh forwarded ports
+```shell script
+ps aux | grep ssh
+kill -9 <id>
+```
+
+#### Grafana dashboard
+enable prometheus on microk8s VM
+```shell script
+microk8s.enable prometheus
+# get path for grafana
+kubectl cluster-info
+# run dashboard
+kubectl proxy
+```
+On host machine run:
+```shell script
+# get ip of running VMs
+multipass list
+# port-forward to access dashbord from localhost
+ssh -L 8001:localhost:8001 ubuntu@<vm-ip>
+```
+Open grafana dashboard at `http://localhost:8001<path-for-grafana>`.
+
