@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: tweet-stream-client-deploy
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: tweet-stream-client
