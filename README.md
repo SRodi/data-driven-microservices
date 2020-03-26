@@ -162,11 +162,18 @@ delete deployments and services within `microk8`
 bash kubernetes/delete.sh
 ```
 
+#### Scale deployment
+scale client deployment to 3 replica sets
+```bash
+kubectl scale --replicas=3 deployment/tweet-stream-client-deploy
+```
+
 Kubernetes demo
 
 ![architecture](kubernetes/static/microk8-demo.png)
 
 #### Kubernetes dashboard
+This will require additional resource allocation (i.e. it will not work with the microk8s just created above with --mem 3G)
 
 On multipass VM run:
 ```shell script
@@ -194,6 +201,8 @@ kill -9 <id>
 ```
 
 #### Grafana dashboard
+This will require additional resource allocation (i.e. it will not work with the microk8s just created above with --mem 3G)
+
 enable prometheus on microk8s VM
 ```shell script
 microk8s.enable prometheus
