@@ -205,7 +205,7 @@ This will require additional resource allocation (i.e. it will not work with the
 
 enable prometheus on microk8s VM
 ```shell script
-microk8s.enable prometheus
+microk8s.enable dashboard ingress prometheus
 # get path for grafana
 kubectl cluster-info
 # run dashboard
