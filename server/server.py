@@ -5,30 +5,12 @@ import test_pb2
 import time
 import test_pb2_grpc
 import csv
-# from kaggle.api.kaggle_api_extended import KaggleApi
-# import zipfile
 
 class TestService(test_pb2_grpc.TestServiceServicer):
     """The listener function implements the rpc call as described in the .proto file"""
     def __init__(self):
         print("server running on port 9999")
         self.messages = []
-
-        # # authenticate to kaggle make sure kaggle api is installed and
-        # # your credentials file is in ~/.kaggle/kaggle.json
-        # api = KaggleApi()
-        # api.authenticate()
-        # # download single file from kaggle
-        # # Signature: dataset_download_file(dataset, file_name, path=None, force=False, quiet=True)
-        # api.dataset_download_file('kazanova/sentiment140', 'training.1600000.processed.noemoticon.csv',
-        #                           path='/Users/sk/Documents/src/srodi-gRPC/server/static')
-        # # unzip and save to static folder
-        # with zipfile.ZipFile(
-        #         '/Users/sk/Documents/src/srodi-gRPC/server/static/training.1600000.processed.noemoticon.csv.zip',
-        #         'r') as zip_ref:
-        #     zip_ref.extractall('/Users/sk/Documents/src/srodi-gRPC/server/static/')
-        #
-        # print("downloaded tweets datasets")
 
     def TestCall(self, request, context):
         # request.name to access value sent by client
@@ -45,7 +27,6 @@ class TestService(test_pb2_grpc.TestServiceServicer):
                             # row[col + 1] is the tweet
                             self.messages.append(row[col + 1])
                     line_count += 1
-                # print('Processed ', line_count, ' lines.')
             except UnicodeDecodeError:
                 print('UnicodeDecodeError')
 
