@@ -23,26 +23,16 @@
                     }
                 }
             }
+
+            function toggleTitle(){
+                window.document.getElementById("title-h2").innerHTML = "new text";
+            }
         </script>
 
-<!--        <form action="http://localhost:5000" method="post">-->
-<!--&lt;!&ndash;            <label for="cars">Choose a car:</label>&ndash;&gt;-->
-<!--&lt;!&ndash;            <select id="cars">&ndash;&gt;-->
-<!--&lt;!&ndash;              <option value="volvo">Volvo</option>&ndash;&gt;-->
-<!--&lt;!&ndash;              <option value="saab">Saab</option>&ndash;&gt;-->
-<!--&lt;!&ndash;              <option value="mercedes">Mercedes</option>&ndash;&gt;-->
-<!--&lt;!&ndash;              <option value="audi">Audi</option>&ndash;&gt;-->
-<!--&lt;!&ndash;            </select>&ndash;&gt;-->
-<!--            <input type="text" name="url">-->
-<!--            <input type="submit">-->
-<!--        </form>-->
+        <form action="/" id="dataset-form" method="post" >
 
-        <form action="http://localhost:5000" id="carform" method="post">
-<!--          <label for="fname">Firstname:</label>-->
-<!--          <input type="text" id="fname" name="url">-->
-<!--            <label for="cars">Choose a car:</label>-->
-        <select id="cars" name="url" form="carform">
-          <option value="dib">data is beautiful</option>
+        <select id="dataset" name="url" form="dataset-form">
+          <option value="dib"  >data is beautiful</option>
           <option value="tweets">tweets</option>
         </select>
           <input type="submit">
@@ -51,18 +41,10 @@
         <div id="container">
 
             <div id="title">
-                <h2>Tweet stream</h2>
+                <h2 id="title-h2">DATA STREAM ANALYSIS</h2>
             </div>
 
             <div id ="search" style="background-color: black">
-<!--       WIP         <div id="search-input">-->
-<!--                    <form method="POST">-->
-<!--                        <label>-->
-<!--                            <input type="text" class="input" name="tag" placeholder="">-->
-<!--                            <i class="fas fa-search" type="submit" value="Submit"></i>-->
-<!--                        </label>-->
-<!--                    </form>-->
-<!--                </div>-->
             </div>
 
             <div id="main" >
