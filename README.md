@@ -79,28 +79,41 @@ Following commands must be executed from project root directory `srodi-gRPC/`.
 #### Build images 
 build server docker image
 ```bash
-docker build -f server/server.Dockerfile -t=grcp-stream-server .
+docker build -f server.Dockerfile -t=srodi/stream-server .
+```
+build reddit-server docker image
+```bash
+docker build -f server_reddit.Dockerfile -t=srodi/reddit-stream-server .
 ```
 build client docker image
 ```bash
-docker build -f client/client.Dockerfile -t=grcp-stream-client .
+docker build -f client.Dockerfile -t=srodi/stream-client .
 ```
 build web-server docker image
 ```bash
-docker build -f web_server/web_server.Dockerfile -t=grcp-web-server .
+docker build -f web_server.Dockerfile -t=srodi/web-server .
 ```
 #### Run Containers
 run server container
 ```bash
-docker run -it --name server -p 9999:9999 grcp-stream-server
+docker run -it --name server -p 9999:9999 srodi/stream-server
+```
+run reddit-server container
+```bash
+docker run -it --name reddit-server -p 9998:9998 srodi/reddit-stream-server
 ```
 run client container
 ```bash
-docker run -it --name client --network="host" grcp-stream-client
+docker run -it --name client --network="host" srodi/stream-client
 ``` 
 run web-server container
 ```bash
-docker run -it --name web-server -p 8080:5000 grcp-web-server
+docker run -it --name web-server -p 8080:5000 srodi/web-server
+```
+#### Push image to registry
+push to `DockerHub` container registry
+```bash
+docker push your_hub_username/image_name
 ```
 #### Clean up
 remove containers
@@ -149,17 +162,19 @@ echo "<ssh-host-pub-key>" >> .ssh/authorized_keys
 from host machine run the following to copy kubernetes directory to vm via ssh
 ```shell script
 rsync -avz -e 'ssh' /path/to/local/kubernetes/dir user@remotehost:/path/to/remote
+# for example
+rsync -avz -e 'ssh' kubernetes ubuntu@192.168.64.2:/home/ubuntu/
 ```
 #### Create services
 create deployments and services within `microk8`
 ```bash
-bash kubernetes/create.sh
+bash kubernetes/scripts/create.sh
 ```
 
 #### Delete services
 delete deployments and services within `microk8`
 ```bash
-bash kubernetes/delete.sh
+bash kubernetes/scripts/delete.sh
 ```
 
 #### Scale deployment
