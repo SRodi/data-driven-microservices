@@ -4,7 +4,7 @@ from flask import Flask, render_template, send_from_directory, request
 import redis
 
 app = Flask(__name__)
-redis_host = 'localhost'
+redis_host = 'redis'
 flag = 'reddit'
 
 def get_context(flag_, conn):
