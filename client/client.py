@@ -1,6 +1,5 @@
 # coding=utf-8
 """The Python implememntation of the GRPC srodi-gRPC client"""
-import signal
 
 import grpc
 import test_pb2
@@ -12,12 +11,9 @@ from textblob import TextBlob
 
 longest_tweet = ''
 overall_sentiment = {'positive': 0,'negative': 0}
-redis_host = 'localhost'
-server_tweets = 'localhost'
-server_reddit = 'localhost'
-# redis_host = 'redis'
-# server_tweets = 'tweet-stream-server'
-# server_reddit = 'reddit-stream-server'
+redis_host = 'redis'
+server_tweets = 'tweet-stream-server'
+server_reddit = 'reddit-stream-server'
 rolling_metrics_array = []
 
 def calc_fraction(a, b):
