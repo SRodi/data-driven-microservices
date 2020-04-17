@@ -10,25 +10,6 @@
     </head>
 
     <body>
-        <script>
-            // this applies inline-css to provide button functionality to
-            // display or hide products nav-menu.
-            function toggleMenu(){
-                const nav = window.document.getElementById("nav-menu");
-                if(window.document.body.clientWidth < 1000){
-                    if(nav.style.display === "flex"){
-                        nav.style.display = "none";
-                    } else {
-                        nav.style.display = "flex";
-                    }
-                }
-            }
-
-            function toggleTitle(){
-                window.document.getElementById("title-h2").innerHTML = "new text";
-            }
-        </script>
-
         <form action="/" id="dataset-form" method="post" >
 
         <select id="dataset" name="url" form="dataset-form">
