@@ -10,10 +10,10 @@ import sys
 from textblob import TextBlob
 
 longest_tweet = ''
-overall_sentiment = {'positive': 0,'negative': 0}
+longest_reddit = ''
 redis_host = 'redis'
-server_tweets = 'tweet-stream-server'
-server_reddit = 'reddit-stream-server'
+server_tweets = 'tweet-stream-server:9999'
+server_reddit = 'reddit-stream-server:9998'
 rolling_metrics_array = []
 
 def calc_fraction(a, b):
@@ -43,30 +43,43 @@ def eval_sentiment(blob):
     return sentiment + ' (' + str(len(rolling_metrics_array)) + ' tweets in last 3 min) CURRENT TWEET: ' + str(sentiment_tweet)
 
 
-def eval_len(tweet):
+def eval_len(text, flag):
+    global longest_reddit
     global longest_tweet
-    if len(tweet) > len(longest_tweet):
-        longest_tweet = tweet
-    return longest_tweet
+    out = ''
+    if flag == 'tweet':
+        if len(text) > len(longest_tweet):
+            longest_tweet = text
+        out = longest_tweet
+    if flag == 'reddit':
+        if len(text) > len(longest_reddit):
+            longest_reddit = text
+        out = longest_reddit
+    return out
 
+def check_redis():
+    redis_test = redis.StrictRedis()  # non-default ports could go here
+    try:
+        return redis_test.ping()
+    except redis.exceptions.ConnectionError:
+        return 'err'
 
 def run():
-    count = 0
-    global overall_dict
-
     try:
+        while check_redis() == 'err': continue
         conn = redis.StrictRedis(host=redis_host, port=6379)
-        # wait for connection
         while not conn.get('url'): continue
         while conn.get('url'):
             url = conn.get('url')
-
+            print(url)
             if url == 'static/training.1600000.processed.noemoticon.csv':
-                with grpc.insecure_channel(server_tweets + ":9999") as channel:
+
+                with grpc.insecure_channel(server_tweets) as channel:
                     total_length = 0
+                    count = 0
                     stub = test_pb2_grpc.TestServiceStub(channel)
-                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url))
-                    # if not url: url = 'static/training.1600000.processed.noemoticon.csv'
+                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
+
                     for response in result_generator:
                         print(response.message)
                         total_length += len(response.message)
@@ -91,20 +104,23 @@ def run():
                         if count == 0:
                             conn.set("log.client-analytics.longest", message)
                         else:
-                            conn.set("log.client-analytics.longest", eval_len(message))
+                            conn.set("log.client-analytics.longest", eval_len(message, 'tweet'))
                         # increment tweet count
                         count = count + 1
 
                         if url != conn.get('url'):
-                            channel.close()
+                            channel.unsubscribe(run)
+                            # channel.close()
                             break
 
             if url == 'static/r_dataisbeautiful_posts.csv':
-                with grpc.insecure_channel(server_reddit + ":9998") as channel:
+
+                with grpc.insecure_channel(server_reddit) as channel:
                     total_length = 0
+                    count = 0
                     stub = test_pb2_grpc.TestServiceStub(channel)
-                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url))
-                    # if not url: url = 'static/training.1600000.processed.noemoticon.csv'
+                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
+
                     for response in result_generator:
                         print(response.message)
                         total_length += len(response.message)
@@ -129,21 +145,18 @@ def run():
                         if count == 0:
                             conn.set("log.client-analytics.reddit-longest", message)
                         else:
-                            conn.set("log.client-analytics.reddit-longest", eval_len(message))
+                            conn.set("log.client-analytics.reddit-longest", eval_len(message, 'reddit'))
                         # increment tweet count
                         count = count + 1
 
                         if url != conn.get('url'):
-                            channel.close()
+                            channel.unsubscribe(run)
+                            # channel.close()
                             break
 
         conn.close()
     except Exception as ex:
         print('Error:', ex)
-
-def close(channel):
-    """Close the channel"""
-    channel.close()
 
 
 if __name__ == "__main__":
