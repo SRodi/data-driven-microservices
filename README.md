@@ -8,8 +8,12 @@ gRPC example to implement data streaming and simulate real-time analytics
 
 File `training.1600000.processed.noemoticon.csv` can be downloaded from this [link](https://www.kaggle.com/kazanova/sentiment140/data)
 
-#### Architecture
+#### Architecture 
 Docker compose will bring up 4 containers following the architecture described in diagram below.
+
+Note: `An additional service has been deployed [server-reddit]. server-reddit has the 
+same functionality and relations as [Server] service pictured below but it serves a different 
+dataset.`
 
 I have chosen to implement a server to read the tweets csv and generate the gRPC 
 stream which is then consumed by a client service which live-streams the tweets, 
@@ -215,7 +219,7 @@ ps aux | grep ssh
 kill -9 <id>
 ```
 
-#### Grafana dashboard
+## Grafana dashboard
 This will require additional resource allocation (i.e. it will not work with the microk8s just created above with --mem 3G)
 
 enable prometheus on microk8s VM
@@ -234,4 +238,61 @@ multipass list
 ssh -L 8001:localhost:8001 ubuntu@<vm-ip>
 ```
 Open grafana dashboard at `http://localhost:8001<path-for-grafana>`.
+
+## Serverless functions
+
+Two functions have been developed to read and write to Redis, please see 
+
+Deploy kubeless
+```shell script
+export RELEASE=$(curl -s https://api.github.com/repos/kubeless/kubeless/releases/latest | grep tag_name | cut -d '"' -f 4)
+kubectl create ns kubeless
+kubectl create -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-$RELEASE.yaml
+```
+Install kubeless cli
+```shell script
+export OS=$(uname -s| tr '[:upper:]' '[:lower:]')
+curl -OL https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless_$OS-amd64.zip && \
+  unzip kubeless_$OS-amd64.zip && \
+  sudo mv bundles/kubeless_$OS-amd64/kubeless /usr/local/bin/
+```
+Deploy functions
+```shell script
+# test function
+kubeless function deploy test --runtime python2.7 \
+    --from-file test.py \
+    --handler redis-test.get_from_redis --dependencies requirements.txt
+# redis-set function
+kubeless function deploy redis-set --runtime python2.7 \
+    --from-file redis-write.py \
+    --handler redis-write.redis_set --dependencies requirements.txt
+```
+Execute functions
+```shell script
+# test function test (no parameters)
+kubeless function call test
+# test function redis-set (with parameter)
+kubeless function call redis-set --data 'test-value1'
+```
+Clean up
+```shell script
+kubectl delete -f https://github.com/kubeless/kubeless/releases/download/$RELEASE/kubeless-$RELEASE.yaml
+kubeless function delete test
+kubeless function delete redis-set
+```
+
+# Tests
+
+Unit tests have been developed to test `redis`, `tweet-server` and `reddit-server`. 
+Test file is located in `client/grpc_test.py`. This test uses the same stubs as the client.
+
+# Useful commands
+delete all evicted pods manually after an incident
+```shell script
+kubectl get pods --all-namespaces -o json | jq '.items[] | select(.status.reason!=null) | select(.status.reason | contains("Evicted")) | "microk8s.kubectl delete pods \(.metadata.name) -n \(.metadata.namespace)"' | xargs -n 1 bash -c
+```
+gcloud context
+```shell script
+gcloud container clusters get-credentials cluster-1 --zone europe-west1-b --project pulumi-259310
+```
 

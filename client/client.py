@@ -1,5 +1,7 @@
 # coding=utf-8
 """The Python implememntation of the GRPC srodi-gRPC client"""
+import threading
+import time
 
 import grpc
 import test_pb2
@@ -64,100 +66,116 @@ def check_redis():
     except redis.exceptions.ConnectionError:
         return 'err'
 
+def stream_tweet(conn, url):
+    with grpc.insecure_channel(server_tweets) as channel:
+        total_length = 0
+        count = 0
+        stub = test_pb2_grpc.TestServiceStub(channel)
+        result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
+
+        for response in result_generator:
+            print(response.message)
+            total_length += len(response.message)
+            print("tweets real-time character count: " + str(total_length))
+            print("Client received from tweets server: " + str(response.message))
+            message = str(response.message)
+            blob = TextBlob(message)
+            sent_3min = eval_sentiment(blob)
+            sys.stdout.flush()
+
+            time = datetime.datetime.now()
+            #   store tweet
+            conn.set("log.client-analytics." + str(time), message)
+            #   evaluate  total
+            conn.set("log.client-analytics.total", count)
+            # current tweet
+            conn.set("log.client-analytics.latest", message)
+            #   sentiment of current tweet
+            conn.set("log.client-analytics.3min", sent_3min)
+
+            #   longest tweet
+            if count == 0:
+                conn.set("log.client-analytics.longest", message)
+            else:
+                conn.set("log.client-analytics.longest", eval_len(message, 'tweet'))
+            # increment tweet count
+            count = count + 1
+
+            if url != conn.get('url'):
+                channel.close()
+                break
+
+def stream_reddit(conn, url):
+    with grpc.insecure_channel(server_reddit) as channel:
+        total_length = 0
+        count = 0
+        stub = test_pb2_grpc.TestServiceStub(channel)
+        result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
+
+        for response in result_generator:
+            print(response.message)
+            total_length += len(response.message)
+            print("reddit real-time character count: " + str(total_length))
+            print("Client received from reddit server: " + str(response.message))
+            message = str(response.message)
+            blob = TextBlob(message)
+            sent_3min = eval_sentiment(blob)
+            sys.stdout.flush()
+
+            time = datetime.datetime.now()
+            #   store reddit
+            conn.set("log.client-analytics.reddit" + str(time), message)
+            #   evaluate  total
+            conn.set("log.client-analytics.reddit-total", count)
+            # current tweet
+            conn.set("log.client-analytics.reddit-latest", message)
+            #   sentiment of current tweet
+            conn.set("log.client-analytics.reddit-3min", sent_3min)
+
+            #   longest tweet
+            if count == 0:
+                conn.set("log.client-analytics.reddit-longest", message)
+            else:
+                conn.set("log.client-analytics.reddit-longest", eval_len(message, 'reddit'))
+            # increment tweet count
+            count = count + 1
+
+            if url != conn.get('url'):
+                channel.close()
+                break
+
 def run():
-    try:
-        while check_redis() == 'err': continue
-        conn = redis.StrictRedis(host=redis_host, port=6379)
-        while not conn.get('url'): continue
-        while conn.get('url'):
-            url = conn.get('url')
-            print(url)
-            if url == 'static/training.1600000.processed.noemoticon.csv':
+    # wait till redis is available
+    while check_redis() == 'err': continue
+    conn = redis.StrictRedis(host=redis_host, port=6379)
 
-                with grpc.insecure_channel(server_tweets) as channel:
-                    total_length = 0
-                    count = 0
-                    stub = test_pb2_grpc.TestServiceStub(channel)
-                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
+    print('successfully connected to redis')
 
-                    for response in result_generator:
-                        print(response.message)
-                        total_length += len(response.message)
-                        print("tweets real-time character count: " + str(total_length))
-                        print("Client received from tweets server: " + str(response.message))
-                        message = str(response.message)
-                        blob = TextBlob(message)
-                        sent_3min = eval_sentiment(blob)
-                        sys.stdout.flush()
+    # wait until dataset url is populated in redis
+    while not conn.get('url'): continue
 
-                        time = datetime.datetime.now()
-                        #   store tweet
-                        conn.set("log.client-analytics." + str(time), message)
-                        #   evaluate  total
-                        conn.set("log.client-analytics.total", count)
-                        # current tweet
-                        conn.set("log.client-analytics.latest", message)
-                        #   sentiment of current tweet
-                        conn.set("log.client-analytics.3min", sent_3min)
+    print('successfully fetched a value from redis')
 
-                        #   longest tweet
-                        if count == 0:
-                            conn.set("log.client-analytics.longest", message)
-                        else:
-                            conn.set("log.client-analytics.longest", eval_len(message, 'tweet'))
-                        # increment tweet count
-                        count = count + 1
+    while conn.get('url'):
+        url = conn.get('url')
+        print(url)
+        try:
+            if url == b'static/training.1600000.processed.noemoticon.csv':
+                print('connected to tweet stream service')
+                t1 = threading.Thread(target=stream_tweet(conn, url))
+                t1.start()
+        except grpc.RpcError as e:
+            print('grpc error', e)
 
-                        if url != conn.get('url'):
-                            channel.unsubscribe(run)
-                            # channel.close()
-                            break
+        try:
+            if url == b'static/r_dataisbeautiful_posts.csv':
+                print('connected to reddit stream service')
+                t2 = threading.Thread(target=stream_reddit(conn, url))
+                t2.start()
+        except grpc.RpcError as e:
+            print('grpc error', e)
 
-            if url == 'static/r_dataisbeautiful_posts.csv':
-
-                with grpc.insecure_channel(server_reddit) as channel:
-                    total_length = 0
-                    count = 0
-                    stub = test_pb2_grpc.TestServiceStub(channel)
-                    result_generator = stub.TestCall(test_pb2.TestRequest(name=url), wait_for_ready=True)
-
-                    for response in result_generator:
-                        print(response.message)
-                        total_length += len(response.message)
-                        print("reddit real-time character count: " + str(total_length))
-                        print("Client received from reddit server: " + str(response.message))
-                        message = str(response.message)
-                        blob = TextBlob(message)
-                        sent_3min = eval_sentiment(blob)
-                        sys.stdout.flush()
-
-                        time = datetime.datetime.now()
-                        #   store reddit
-                        conn.set("log.client-analytics.reddit"+str(time), message)
-                        #   evaluate  total
-                        conn.set("log.client-analytics.reddit-total", count)
-                        # current tweet
-                        conn.set("log.client-analytics.reddit-latest", message)
-                        #   sentiment of current tweet
-                        conn.set("log.client-analytics.reddit-3min", sent_3min)
-
-                        #   longest tweet
-                        if count == 0:
-                            conn.set("log.client-analytics.reddit-longest", message)
-                        else:
-                            conn.set("log.client-analytics.reddit-longest", eval_len(message, 'reddit'))
-                        # increment tweet count
-                        count = count + 1
-
-                        if url != conn.get('url'):
-                            channel.unsubscribe(run)
-                            # channel.close()
-                            break
-
-        conn.close()
-    except Exception as ex:
-        print('Error:', ex)
-
+        time.sleep(1)
 
 if __name__ == "__main__":
     run()

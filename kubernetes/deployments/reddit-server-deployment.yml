@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reddit-stream-server-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reddit-stream-server
+  minReadySeconds: 6
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: reddit-stream-server
+    spec:
+      containers:
+      - name: reddit-stream-server
+        image: srodi/reddit-stream-server:latest
+        ports:
+        - containerPort: 9998

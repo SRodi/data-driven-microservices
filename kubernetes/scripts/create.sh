@@ -22,6 +22,13 @@ while [[ $(microk8s.kubectl get pods -l app=tweet-stream-server -o 'jsonpath={..
 # server service
 microk8s.kubectl create -f ../services/server-service.yml
 
+# reddit-server deployment
+microk8s.kubectl create -f ../deployments/reddit-server-deployment.yml
+# wait till reddit-server is running
+while [[ $(microk8s.kubectl get pods -l app=reddit-stream-server -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}') != "True" ]]; do sleep 1; done
+# reddit-server service
+microk8s.kubectl create -f ../services/reddit-server-service.yml
+
 # client deployment
 microk8s.kubectl create -f ../deployments/client-deployment.yml
 

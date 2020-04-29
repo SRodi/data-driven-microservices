@@ -5,8 +5,10 @@ metadata:
   labels:
     app: tweet-stream-server
 spec:
-  ports:
-  - port: 9999
-    protocol: TCP
   selector:
     app: tweet-stream-server
+  type: NodePort
+  ports:
+  - port: 9999
+    nodePort: 30009
+    protocol: TCP

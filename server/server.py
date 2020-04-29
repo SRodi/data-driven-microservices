@@ -35,12 +35,6 @@ class TestService(test_pb2_grpc.TestServiceServicer):
             if len(g) > 0:
                 yield test_pb2.TestResponse(message=g)
 
-        for g in self.messages:
-            time.sleep(2)
-            if len(g) > 0:
-                yield test_pb2.TestResponse(message=g)
-
-
 def serve():
     """The main serve function of the server.
     This opens the socket, and listens for incoming grpc conformant packets"""
