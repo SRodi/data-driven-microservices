@@ -10,36 +10,22 @@
     </head>
 
     <body>
-        <script>
-            // this applies inline-css to provide button functionality to
-            // display or hide products nav-menu.
-            function toggleMenu(){
-                const nav = window.document.getElementById("nav-menu");
-                if(window.document.body.clientWidth < 1000){
-                    if(nav.style.display === "flex"){
-                        nav.style.display = "none";
-                    } else {
-                        nav.style.display = "flex";
-                    }
-                }
-            }
-        </script>
+        <form action="/" id="dataset-form" method="post" >
+
+        <select id="dataset" name="url" form="dataset-form">
+          <option value="dib"  >data is beautiful</option>
+          <option value="tweets">tweets</option>
+        </select>
+          <input type="submit">
+        </form>
 
         <div id="container">
 
             <div id="title">
-                <h2>Tweet stream</h2>
+                <h2 id="title-h2">DATA STREAM ANALYSIS</h2>
             </div>
 
             <div id ="search" style="background-color: black">
-<!--       WIP         <div id="search-input">-->
-<!--                    <form method="POST">-->
-<!--                        <label>-->
-<!--                            <input type="text" class="input" name="tag" placeholder="">-->
-<!--                            <i class="fas fa-search" type="submit" value="Submit"></i>-->
-<!--                        </label>-->
-<!--                    </form>-->
-<!--                </div>-->
             </div>
 
             <div id="main" >
